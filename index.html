@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Anatomy & Physiology - Sem 1 to 6</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+<style>body{font-family:'Plus Jakarta Sans',sans-serif}</style>
+</head>
+<body class="bg-[#0a0a0a] text-white">
+<!-- NICKNAME ENTRY -->
+<div id="nickScreen" class="min-h-screen flex items-center justify-center p-4">
+<div class="bg-zinc-900 border border-zinc-800 p-6 rounded-[24px] w-full max-w-sm text-center">
+<h1 class="text-2xl font-bold">Anatomy & Physiology 🧬</h1>
+<p class="text-zinc-500 text-sm mt-1 mb-6">Sem 1 to 6 • Visual + Fun</p>
+<input id="nickInput" class="w-full bg-zinc-800 border border-zinc-700 p-3 rounded-xl text-center font-bold" placeholder="Enter your nickname e.g. anu123">
+<button id="enterBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold mt-3">Enter App 🚀</button>
+<p class="text-[10px] text-zinc-600 mt-3">No OTP needed. Your nickname = your ID for friends & chat</p>
+</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+<header class="p-4 flex justify-between items-center border-b border-zinc-800 sticky top-0 bg-[#0a0a0a] z-20">
+<div><p class="font-bold" id="myNick">Hi</p><p class="text-[10px] text-zinc-500">Anatomy Mastery</p></div>
+<div id="myQrMini" class="bg-white p-1 rounded-lg"></div>
+</header>
+
+<nav class="flex gap-2 p-3 overflow-x-auto sticky top-[65px] bg-[#0a0a0a] z-10">
+<button data-tab="learn" class="tabBtn bg-white text-black px-4 py-2 rounded-full text-sm font-bold">Learn</button>
+<button data-tab="quiz" class="tabBtn bg-zinc-800 px-4 py-2 rounded-full text-sm">Quiz</button>
+<button data-tab="flash" class="tabBtn bg-zinc-800 px-4 py-2 rounded-full text-sm">Flashcards</button>
+<button data-tab="friends" class="tabBtn bg-zinc-800 px-4 py-2 rounded-full text-sm">Friends</button>
+<button data-tab="chat" class="tabBtn bg-zinc-800 px-4 py-2 rounded-full text-sm">Chats</button>
+</nav>
+
+<!-- LEARN -->
+<div id="tab-learn" class="tab p-4">
+<div class="flex gap-2 mb-4 overflow-x-auto">
+<button class="sBtn bg-violet-600 px-3 py-1 rounded-full text-xs" data-sem="all">All Sem</button>
+<button class="sBtn bg-zinc-800 px-3 py-1 rounded-full text-xs" data-sem="1">Sem1</button>
+<button class="sBtn bg-zinc-800 px-3 py-1 rounded-full text-xs" data-sem="2">Sem2</button>
+<button class="sBtn bg-zinc-800 px-3 py-1 rounded-full text-xs" data-sem="3">Sem3</button>
+<button class="sBtn bg-zinc-800 px-3 py-1 rounded-full text-xs" data-sem="4">Sem4</button>
+<button class="sBtn bg-zinc-800 px-3 py-1 rounded-full text-xs" data-sem="5">Sem5</button>
+<button class="sBtn bg-zinc-800 px-3 py-1 rounded-full text-xs" data-sem="6">Sem6</button>
+</div>
+<div id="grid" class="grid md:grid-cols-2 gap-3"></div>
+</div>
+
+<div id="tab-quiz" class="tab hidden p-4"><div id="quizBox" class="bg-zinc-900 border border-zinc-800 p-6 rounded-[20px]"></div></div>
+<div id="tab-flash" class="tab hidden p-4"><div id="flashBox" class="grid gap-3"></div></div>
+
+<!-- FRIENDS -->
+<div id="tab-friends" class="tab hidden p-4 space-y-4">
+<div class="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+<p class="font-bold text-sm">🔍 Search Nickname</p>
+<div class="flex gap-2 mt-2"><input id="searchInput" class="flex-1 bg-zinc-800 p-3 rounded-xl text-sm" placeholder="e.g. anu123"><button id="searchBtn" class="bg-white text-black px-4 rounded-xl font-bold text-sm">Search</button></div>
+<div id="searchRes" class="mt-3 space-y-2"></div>
+</div>
+<div class="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+<p class="font-bold text-sm">My QR Code</p>
+<div id="myQr" class="bg-white p-3 rounded-xl w-fit mt-3"></div>
+<p class="text-xs text-zinc-500 mt-2">Ask friend to scan this</p>
+<button id="scanBtn" class="w-full bg-violet-600 py-3 rounded-xl font-bold mt-3">📷 Scan Friend's QR</button>
+<div id="reader" class="mt-3 hidden"></div>
+</div>
+<div class="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+<p class="font-bold text-sm">My Friends</p>
+<div id="friendsList" class="mt-3 text-sm text-zinc-500">No friends yet</div>
+</div>
+</div>
+
+<!-- CHATS -->
+<div id="tab-chat" class="tab hidden p-4">
+<div class="grid md:grid-cols-3 gap-4">
+<div class="bg-zinc-900 border border-zinc-800 p-3 rounded-2xl">
+<p class="font-bold text-sm">Group: Anatomy Squad 👩‍⚕️</p>
+<div id="groupMsgs" class="h-[320px] overflow-y-auto text-xs space-y-2 bg-black p-2 rounded-xl mt-2 mb-2"></div>
+<div class="flex gap-2"><input id="groupInput" class="flex-1 bg-zinc-800 p-2 rounded-xl text-sm" placeholder="Ask doubt..."><button id="groupSend" class="bg-violet-600 px-4 rounded-xl font-bold">Send</button></div>
+</div>
+<div class="bg-zinc-900 border border-zinc-800 p-3 rounded-2xl md:col-span-2">
+<p class="font-bold text-sm">Private: <span id="privateWith">Select friend</span></p>
+<div id="privateMsgs" class="h-[320px] overflow-y-auto text-xs space-y-2 bg-black p-2 rounded-xl mt-2 mb-2"></div>
+<div class="flex gap-2"><input id="privateInput" class="flex-1 bg-zinc-800 p-2 rounded-xl text-sm" placeholder="Type..."><button id="privateSend" class="bg-white text-black px-4 rounded-xl font-bold">Send</button></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="fixed inset-0 bg-black/80 hidden p-4 z-50 overflow-y-auto">
+<div class="bg-zinc-900 border border-zinc-800 max-w-2xl mx-auto rounded-[24px] p-6">
+<button onclick="modal.classList.add('hidden')" class="float-right bg-zinc-800 px-3 py-1 rounded-full text-xs">Close X</button>
+<div id="modalContent"></div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getFirestore, doc, setDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBkXIWxfnpjeJRzQTZSMeJa_b11kQ84HG4",
+    authDomain: "studymate-97da1.firebaseapp.com",
+      projectId: "studymate-97da1",
+        storageBucket: "studymate-97da1.firebasestorage.app",
+          messagingSenderId: "943450172085",
+            appId: "1:943450172085:web:d119580c99fd587be0ecfc"
+            };
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+
+            // --- 20 IMPORTANT CHAPTERS SEM 1-6 ---
+            const chapters=[
+            {sem:1,t:"Cell - The Unit of Life",e:"🧬",c:"bg-pink-500",short:"37 trillion cells! Membrane = gate, Mitochondria = powerhouse.",visual:`<div class="bg-zinc-950 rounded-xl p-3 border border-zinc-800"><div class="flex justify-center"><div class="w-32 h-20 border-2 border-pink-400 rounded-full relative"><div class="absolute top-2 left-2 w-6 h-6 bg-violet-400 rounded-full flex items-center justify-center text-[8px]">Nucleus</div><div class="absolute bottom-2 right-3 w-8 h-3 bg-yellow-400 rounded-full text-[7px] text-black text-center">Mito</div><div class="absolute top-1 right-6 w-2 h-2 bg-green-400 rounded-full"></div><div class="text-[8px] absolute -bottom-5 left-0 right-0 text-center text-zinc-500">Cell Membrane - Phospholipid Bilayer</div></div></div></div>`,explain:"Cell is basic living unit. Every organ made of cells. Cell has 3 parts: Membrane (protects), Cytoplasm (jelly with organelles), Nucleus (controls).",points:["Cell membrane: semi-permeable, made of phospholipid + protein - like security gate","Mitochondria: Powerhouse, makes ATP - energy currency of cell","Nucleus: Brain of cell, has DNA, controls all activities","Transport: Active needs energy (Na+/K+ pump), Passive no energy (diffusion)"]},
+            {sem:1,t:"Tissues - Epithelial & Connective",e:"🧫",c:"bg-orange-500",short:"4 tissue types. Epithelium like tiles.",visual:`<div class="grid grid-cols-3 gap-2 text-[9px]"><div class="bg-zinc-950 p-2 rounded-xl text-center border border-zinc-800">Squamous<br>Flat tiles<br>⬜⬜⬜</div><div class="bg-zinc-950 p-2 rounded-xl text-center border border-zinc-800">Cuboidal<br>Cube<br>🟦🟦</div><div class="bg-zinc-950 p-2 rounded-xl text-center border border-zinc-800">Columnar<br>Pillar<br>▬▬</div></div>`,explain:"Tissue = group of similar cells doing same work. 4 types only. Epithelial covers body, Connective connects, Muscular contracts, Nervous conducts.",points:["Simple epithelium: 1 layer - for absorption like intestine","Stratified: many layers - protection like skin","Connective: Blood, Bone, Cartilage, Fat - most diverse","Basement membrane anchors epithelium"]},
+            {sem:1,t:"Skeletal System - 206 Bones",e:"🦴",c:"bg-zinc-200 text-black",short:"Axial 80 + Appendicular 126 = 206. Longest femur.",visual:`<div class="bg-zinc-950 p-3 rounded-xl text-[10px] font-mono"><div>Long Bone Structure:</div><div class="mt-2 border-l-2 border-zinc-600 pl-2">Epiphysis [spongy bone + marrow]<br>--- Metaphysis (growth plate)<br>Diaphysis [compact bone + medullary cavity]<br>Periosteum - outer covering</div></div>`,explain:"Skeleton gives shape, protects organs, makes blood, stores calcium. Axial = skull, spine, ribs. Appendicular = arms, legs.",points:["Osteoblast builds new bone, Osteoclast eats old bone - remodeling","Long bones have diaphysis shaft, epiphysis ends","Bone marrow makes RBC in adults (sternum, pelvis)","Calcium + Vitamin D + Exercise = strong bone"]},
+            {sem:1,t:"Muscular System & Contraction",e:"💪",c:"bg-red-500",short:"Sliding filament: Actin + Myosin slide = contraction.",visual:`<div class="bg-zinc-950 p-3 rounded-xl"><div class="flex items-center gap-2"><div class="h-2 w-16 bg-blue-400 rounded">Actin thin</div><div class="text-xs">➡️⬅️</div><div class="h-2 w-16 bg-red-400 rounded">Myosin thick</div></div><p class="text-[9px] text-zinc-500 mt-2">Myosin head pulls actin, needs Ca++ & ATP. Sarcomere shortens.</p></div>`,explain:"Muscle contracts to move. 3 types. Skeletal moves bones. Contraction needs calcium and ATP. Origin is fixed end, Insertion moves.",points:["Skeletal: voluntary, striated, multinucleated","Cardiac: involuntary, heart only, intercalated discs","Smooth: involuntary, organs, spindle shaped","Motor unit = 1 neuron + muscle fibers it controls"]},
+            {sem:2,t:"Blood & Heart - 4 Chambers",e:"❤️",c:"bg-red-600",short:"Double circulation. Lub = AV valves, Dub = SL valves.",visual:`<div class="bg-zinc-950 p-3 rounded-xl text-center"><div class="grid grid-cols-2 gap-2 text-[10px]"><div class="bg-red-900/50 p-2 rounded">RA<br>Receives deO2</div><div class="bg-red-900/50 p-2 rounded">LA<br>Receives O2</div><div class="bg-red-900 p-2 rounded font-bold">RV -> Lungs</div><div class="bg-red-900 p-2 rounded font-bold">LV -> Body (thickest)</div></div><p class="text-[9px] mt-2 text-zinc-500">Valves: Tricuspid, Bicuspid, Pulmonary, Aortic</p></div>`,explain:"Heart pumps 5L blood per minute. Right side deoxygenated to lungs, Left side oxygenated to body. SA node pacemaker 60-100.",points:["SA node natural pacemaker, AV node delay, Bundle of His spreads","ECG: P wave atria contraction, QRS ventricle, T relaxation","Blood: 55% plasma, 45% cells. RBC 120 days life","ABO groups - antigen antibody reaction"]},
+            {sem:2,t:"Blood Vessels & Lymphatic",e:"🩸",c:"bg-rose-500",short:"Artery thick, Vein thin with valves, Capillary 1 cell.",visual:`<div class="flex gap-2 text-[9px]"><div class="flex-1 bg-red-950 p-2 rounded-xl text-center border border-red-800">ARTERY<br>Thick wall<br>High pressure<br>No valve</div><div class="flex-1 bg-blue-950 p-2 rounded-xl text-center border border-blue-800">VEIN<br>Thin wall<br>Low pressure<br>Has valves</div></div>`,explain:"Artery takes away from heart, Vein brings to heart, Capillary where exchange happens. Lymph drains extra fluid and fights infection.",points:["Systolic 120 (contraction), Diastolic 80 (relaxation)","Lymph nodes filter bacteria - swelling = infection","Spleen largest lymph organ, stores blood","Edema = fluid stays in tissue, lymph blocked"]},
+            {sem:2,t:"Respiratory - Nose to Alveoli",e:"🫁",c:"bg-sky-500",short:"480 million alveoli! Tidal volume 500ml.",visual:`<div class="bg-zinc-950 p-3 rounded-xl text-[10px]"><div>Bronchi -> Bronchioles -> Alveoli (grapes)</div><div class="mt-2 flex gap-1"><div class="w-6 h-6 bg-sky-300 rounded-full"></div><div class="w-6 h-6 bg-sky-300 rounded-full"></div><div class="w-6 h-6 bg-sky-300 rounded-full"></div><span class="text-zinc-500">Surfactant prevents collapse</span></div></div>`,explain:"Air goes Nose -> Pharynx -> Larynx (voice) -> Trachea -> Bronchi -> Alveoli where O2/CO2 exchange. Diaphragm main muscle.",points:["Tidal volume 500ml, Vital capacity 4500ml, Total 6000ml","Inspiration active (diaphragm contracts), Expiration passive","Hemoglobin in RBC carries O2 - 4 O2 per Hb","Asthma = bronchoconstriction, wheezing"]},
+            {sem:3,t:"Digestive - 9m Tube",e:"🍔",c:"bg-yellow-400 text-black",short:"Mouth to anus 9m. Liver largest gland.",visual:`<div class="bg-zinc-950 p-2 rounded-xl text-[10px] leading-4">Mouth (amylase) → Esophagus (peristalsis 10sec) → Stomach (HCl + pepsin, pH 2) → Duodenum (bile from liver, lipase from pancreas) → Jejunum (villi absorb) → Ileum → Colon (water absorbs) → Rectum</div>`,explain:"Digestion breaks big food to small. Mechanical chewing + chemical enzymes. Absorption in small intestine via villi that increase area 600x.",points:["Liver: makes bile (fat digestion), stores glycogen, detox","Pancreas: amylase carbs, trypsin protein, lipase fat + insulin","Villi + microvilli = huge absorption area","Peristalsis wave moves food, segmentation mixes"]},
+            {sem:3,t:"Kidney & Nephron",e:"🫘",c:"bg-amber-600",short:"Filters 180L/day, makes 1.5L urine. Nephron = unit.",visual:`<div class="bg-zinc-950 p-3 rounded-xl text-[9px] font-mono">Glomerulus (filter) → Bowman's capsule<br>↓<br>PCT (65% reabsorb) → Loop of Henle (concentrates)<br>↓<br>DCT (fine tuning) → Collecting duct (ADH works here) → Urine</div>`,explain:"Kidney filters blood, saves useful, throws waste. Nephron is functional unit 1 million per kidney. GFR 125 ml/min.",points:["GFR 125ml/min, if low = kidney failure","ADH from pituitary saves water - less urine","Aldosterone saves Na+ and water, raises BP","Kidney stone mostly calcium oxalate, pain severe"]},
+            {sem:4,t:"Endocrine - Hormones",e:"🧠",c:"bg-purple-500",short:"Pituitary master gland. Feedback like thermostat.",visual:`<div class="bg-zinc-950 p-2 rounded-xl text-[10px]">Hypothalamus → Pituitary →<br>→ Thyroid (T3 T4) metabolism<br>→ Adrenal (cortisol stress)<br>→ Pancreas (insulin sugar)<br>→ Gonads (sex hormones)<br>Negative feedback stops overproduction</div>`,explain:"Endocrine = ductless glands secrete hormones into blood. Slow but long lasting vs nervous fast short.",points:["Thyroid T3 T4 increase metabolism, iodine needed, goiter without","Insulin lowers sugar, Glucagon raises - diabetes when insulin low","Cortisol stress hormone, high in morning","Oxytocin love hormone + milk ejection + labour contraction"]},
+            {sem:4,t:"Nervous System - Brain",e:"🧩",c:"bg-indigo-500",short:"86 billion neurons! Signal 120 m/s.",visual:`<div class="bg-zinc-950 p-3 rounded-xl"><div class="flex gap-2 text-[9px]"><div class="bg-violet-900 p-2 rounded">Dendrite<br>Receives</div><div>→</div><div class="bg-indigo-900 p-2 rounded">Axon<br>Sends</div><div>→</div><div class="bg-zinc-800 p-2 rounded">Synapse<br>Chemical</div></div><p class="text-[8px] text-zinc-500 mt-2">Myelin = insulation speeds signal like electric wire</p></div>`,explain:"CNS = brain + spinal cord, PNS = nerves. Neuron has dendrite receives, axon sends, synapse chemical junction. Neurotransmitters.",points:["Frontal lobe decision personality, Parietal sensation, Occipital vision, Temporal hearing","CSF 150ml protects brain, made in choroid plexus","Reflex arc doesn't go to brain - quick","Sympathetic fight/flight, Parasympathetic rest/digest"]},
+            {sem:5,t:"Special Senses - Eye & Ear",e:"👁️",c:"bg-cyan-400 text-black",short:"Eye 3 layers, Ear 3 parts. Smallest bone stapes in ear.",visual:`<div class="grid grid-cols-2 gap-2 text-[9px]"><div class="bg-zinc-950 p-2 rounded-xl">Eye:<br>Cornea (focus)<br>Lens (adjusts)<br>Retina (rods night, cones color)<br>Optic nerve</div><div class="bg-zinc-950 p-2 rounded-xl">Ear:<br>Outer: Pinna collects<br>Middle: 3 ossicles amplify 22x<br>Inner: Cochlea hearing, Vestibule balance</div></div>`,explain:"Eye focuses light on retina. Myopia can't see far, Hyperopia can't see near. Ear converts sound to electric signal.",points:["Myopia eyeball long, concave lens, Hyperopia short, convex lens","Rods 120 million night vision, Cones 6 million color","Middle ear has malleus incus stapes - stapes smallest 3mm","Inner ear fluid moves hair cells = hearing + balance"]},
+            {sem:5,t:"Reproductive System",e:"👶",c:"bg-fuchsia-500",short:"Sperm daily, Egg monthly. Fertilization in fallopian tube.",visual:`<div class="bg-zinc-950 p-2 rounded-xl text-[9px]">Female Cycle 28 days:<br>Day 1-5 Menstruation<br>Day 6-13 Follicular (FSH, estrogen rise)<br>Day 14 Ovulation (LH surge)<br>Day 15-28 Luteal (progesterone)</div>`,explain:"Male produces sperm in testes, testosterone hormone. Female egg from ovary, estrogen progesterone. Fertilization in tube, implantation in uterus.",points:["Testosterone male features + sperm, Estrogen female features + egg","Ovulation day 14 due to LH surge - most fertile","Placenta gives nutrition + hormones + barrier","Puberty 10-14 yrs due to GnRH -> FSH LH"]},
+            {sem:6,t:"Applied Physiology & Homeostasis",e:"⚡",c:"bg-lime-400 text-black",short:"Body keeps constant - BP, sugar, temp via feedback.",visual:`<div class="bg-zinc-950 p-3 rounded-xl text-[10px]">Homeostasis Examples:<br>↑BP → Baroreceptor → Brain → ↓Heart rate → BP normal<br>↑Sugar → Insulin → Sugar into cells → normal<br>↓Temp → Shivering → heat production</div>`,explain:"Applied means disease. Hypertension >140/90 silent killer, Diabetes high sugar damages organs, Shock low BP no blood to organs. Body tries to keep balance.",points:["Hypertension risk stroke heart attack, less salt + exercise","Diabetes Type1 no insulin since birth, Type2 insulin resistant","Negative feedback brings back to normal, Positive makes more (labour)","All systems work together - failure of one affects all"]},
+            ];
+
+            let myId=localStorage.getItem('myId'), myNick=localStorage.getItem('nick'), selectedFriend=null, chatUnsub=null;
+
+            // Enter
+            if(myId && myNick){
+             document.getElementById('nickScreen').classList.add('hidden');
+              document.getElementById('app').classList.remove('hidden');
+               init();
+               }else{
+                document.getElementById('enterBtn').onclick=async()=>{
+                  const n=document.getElementById('nickInput').value.trim().toLowerCase().replace(/\s/g,'');
+                    if(n.length<3) return alert("Nickname min 3 letters, no space");
+                      const q=await getDocs(query(collection(db,"users"),where("nickname","==",n)));
+                        if(!q.empty) return alert("This nickname already taken, try another like "+n+"123");
+                          myId=Math.random().toString(36).substring(2,10);
+                            myNick=n;
+                              localStorage.setItem('myId',myId); localStorage.setItem('nick',myNick);
+                                await setDoc(doc(db,"users",myId),{uid:myId,nickname:myNick,createdAt:serverTimestamp()});
+                                  document.getElementById('nickScreen').classList.add('hidden');
+                                    document.getElementById('app').classList.remove('hidden');
+                                      init();
+                                       };
+                                       }
+
+                                       async function init(){
+                                        document.getElementById('myNick').innerText=myNick;
+                                         new QRCode(document.getElementById('myQr'),{text:myNick,width:120,height:120});
+                                          new QRCode(document.getElementById('myQrMini'),{text:myNick,width:32,height:32});
+                                           renderChapters('all'); renderQuiz(); renderFlash(); loadFriends(); loadGroup();
+                                           }
+
+                                           function renderChapters(f){
+                                            document.getElementById('grid').innerHTML=chapters.filter(c=>f=="all"||c.sem==f).map((c,i)=>`
+                                             <div onclick="openC(${chapters.indexOf(c)})" class="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl cursor-pointer hover:border-zinc-700">
+                                              <div class="flex gap-3"><div class="w-10 h-10 rounded-xl ${c.c} flex items-center justify-center">${c.e}</div><div class="flex-1"><p class="text-[10px] text-zinc-500">SEM ${c.sem}</p><p class="font-bold text-sm">${c.t}</p><p class="text-xs text-zinc-400 mt-1 line-clamp-2">${c.short}</p></div></div></div>`).join('');
+                                              }
+                                              document.querySelectorAll('.sBtn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.sBtn').forEach(x=>x.className="sBtn bg-zinc-800 px-3 py-1 rounded-full text-xs");b.className="sBtn bg-violet-600 px-3 py-1 rounded-full text-xs";renderChapters(b.dataset.sem)});
+
+                                              window.openC=(idx)=>{
+                                               const c=chapters[idx];
+                                                document.getElementById('modalContent').innerHTML=`
+                                                 <div class="w-12 h-12 ${c.c} rounded-xl flex items-center justify-center text-xl mb-3">${c.e}</div>
+                                                  <h2 class="text-xl font-bold">${c.t}</h2><p class="text-xs text-zinc-500">Semester ${c.sem} • Important Topic</p>
+                                                   <div class="mt-4">${c.visual}</div>
+                                                    <div class="mt-4"><p class="font-bold text-sm">Simple Explanation:</p><p class="text-sm text-zinc-300 mt-1 leading-6">${c.explain}</p></div>
+                                                     <div class="mt-4 space-y-2">${c.points.map(p=>`<div class="bg-zinc-800 border border-zinc-700 p-3 rounded-xl text-sm">• ${p}</div>`).join('')}</div>
+                                                      <div class="mt-4 p-3 bg-violet-900/20 border border-violet-800 rounded-xl"><p class="text-xs">💡 Fun to Remember: ${c.short}</p></div>
+                                                       `;
+                                                        document.getElementById('modal').classList.remove('hidden');
+                                                        };
+
+                                                        // QUIZ
+                                                        let qi=0;
+                                                        function renderQuiz(){
+                                                         const c=chapters[qi];
+                                                          document.getElementById('quizBox').innerHTML=`
+                                                           <p class="text-xs text-zinc-500">Question ${qi+1}/${chapters.length} • ${c.t}</p>
+                                                            <p class="font-bold mt-2">Which is TRUE about ${c.t}?</p>
+                                                             <div class="mt-4 space-y-2">
+                                                              <button onclick="checkQ(true)" class="w-full text-left bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-sm">✅ ${c.points[0]}</button>
+                                                               <button onclick="checkQ(false)" class="w-full text-left bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-sm">❌ This organ has no function</button>
+                                                                <button onclick="checkQ(false)" class="w-full text-left bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-sm">❌ Found only in plants</button>
+                                                                 </div>
+                                                                  <div class="mt-4 flex gap-2"><button onclick="qi=(qi-1+chapters.length)%chapters.length;renderQuiz()" class="bg-zinc-800 px-4 py-2 rounded-full text-xs">Prev</button><button onclick="qi=(qi+1)%chapters.length;renderQuiz()" class="bg-zinc-800 px-4 py-2 rounded-full text-xs">Next</button></div>`;
+                                                                  }
+                                                                  window.checkQ=(ok)=>{ alert(ok?"✅ Correct! You are genius!":"❌ Wrong! Read chapter again"); if(ok){ qi=(qi+1)%chapters.length; renderQuiz(); }};
+
+                                                                  // FLASH
+                                                                  function renderFlash(){
+                                                                   document.getElementById('flashBox').innerHTML=chapters.map(c=>`
+                                                                    <div onclick="this.querySelector('.ans').classList.toggle('hidden')" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 cursor-pointer"><p class="font-bold text-sm">${c.e} ${c.t}</p><p class="text-xs text-zinc-500 mt-1">Tap to reveal answer</p><div class="ans hidden mt-3 bg-violet-600 p-3 rounded-xl text-sm">${c.points[0]}<br><br><span class="text-[10px] opacity-70">${c.explain}</span></div></div>`).join('');
+                                                                    }
+
+                                                                    // TABS
+                                                                    document.querySelectorAll('.tabBtn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabBtn').forEach(x=>x.className="tabBtn bg-zinc-800 px-4 py-2 rounded-full text-sm");b.className="tabBtn bg-white text-black px-4 py-2 rounded-full text-sm font-bold";document.querySelectorAll('.tab').forEach(t=>t.classList.add('hidden'));document.getElementById('tab-'+b.dataset.tab).classList.remove('hidden')});
+
+                                                                    // FRIENDS SEARCH
+                                                                    document.getElementById('searchBtn').onclick=async()=>{
+                                                                     const n=document.getElementById('searchInput').value.trim().toLowerCase();
+                                                                      if(!n) return;
+                                                                       const snap=await getDocs(query(collection(db,"users"),where("nickname","==",n)));
+                                                                        const res=document.getElementById('searchRes'); res.innerHTML="";
+                                                                         if(snap.empty) res.innerHTML="<p class='text-xs text-zinc-500'>No user found with that nickname</p>";
+                                                                          snap.forEach(d=>{
+                                                                            const u=d.data(); if(u.uid==myId) return;
+                                                                              res.innerHTML+=`<div class="flex justify-between items-center bg-zinc-800 p-3 rounded-xl"><span class="text-sm">${u.nickname}</span><button onclick="addFriend('${u.uid}','${u.nickname}')" class="bg-violet-600 px-3 py-1 rounded-full text-xs font-bold">Add</button></div>`;
+                                                                               });
+                                                                               };
+                                                                               window.addFriend=async(uid,nick)=>{
+                                                                                await setDoc(doc(db,"users",myId,"friends",uid),{uid,nickname:nick,addedAt:serverTimestamp()});
+                                                                                 alert("Added "+nick+" as friend!"); loadFriends();
+                                                                                 };
+                                                                                 async function loadFriends(){
+                                                                                  const snap=await getDocs(collection(db,"users",myId,"friends"));
+                                                                                   const list=document.getElementById('friendsList'); list.innerHTML="";
+                                                                                    if(snap.empty){ list.innerHTML="No friends yet. Search or scan QR."; return; }
+                                                                                     snap.forEach(d=>{
+                                                                                       const f=d.data();
+                                                                                         list.innerHTML+=`<div class="flex justify-between bg-zinc-800 p-3 rounded-xl mb-2"><span>${f.nickname}</span><button onclick="openPrivate('${f.uid}','${f.nickname}')" class="text-violet-400 text-xs font-bold">Chat →</button></div>`;
+                                                                                          });
+                                                                                          }
+
+                                                                                          // QR SCAN
+                                                                                          document.getElementById('scanBtn').onclick=()=>{
+                                                                                           document.getElementById('reader').classList.remove('hidden');
+                                                                                            const qr=new Html5Qrcode("reader");
+                                                                                             qr.start({facingMode:"environment"},{fps:10,qrbox:250},async(decoded)=>{
+                                                                                               await qr.stop(); document.getElementById('reader').classList.add('hidden');
+                                                                                                 document.getElementById('searchInput').value=decoded;
+                                                                                                   document.getElementById('searchBtn').click();
+                                                                                                    },()=>{});
+                                                                                                    };
+
+                                                                                                    // GROUP CHAT
+                                                                                                    function loadGroup(){
+                                                                                                     onSnapshot(query(collection(db,"groupChats","anatomySquad","messages"),orderBy("time","asc")),(snap)=>{
+                                                                                                       const box=document.getElementById('groupMsgs'); box.innerHTML="";
+                                                                                                         snap.forEach(d=>{ const m=d.data(); box.innerHTML+=`<div><b class="text-violet-400">${m.nick}:</b> ${m.text}</div>`; });
+                                                                                                           box.scrollTop=box.scrollHeight;
+                                                                                                            });
+                                                                                                            }
+                                                                                                            document.getElementById('groupSend').onclick=async()=>{
+                                                                                                             const t=document.getElementById('groupInput').value.trim(); if(!t) return;
+                                                                                                              await addDoc(collection(db,"groupChats","anatomySquad","messages"),{text:t,nick:myNick,uid:myId,time:serverTimestamp()});
+                                                                                                               document.getElementById('groupInput').value="";
+                                                                                                               };
+
+                                                                                                               // PRIVATE CHAT
+                                                                                                               window.openPrivate=(uid,nick)=>{
+                                                                                                                selectedFriend=uid;
+                                                                                                                 document.getElementById('privateWith').innerText=nick;
+                                                                                                                  const chatId=[myId,uid].sort().join('_');
+                                                                                                                   if(chatUnsub) chatUnsub();
+                                                                                                                    chatUnsub=onSnapshot(query(collection(db,"privateChats",chatId,"messages"),orderBy("time","asc")),(snap)=>{
+                                                                                                                      const box=document.getElementById('privateMsgs'); box.innerHTML="";
+                                                                                                                        snap.forEach(d=>{ const m=d.data(); const me=m.uid==myId; box.innerHTML+=`<div class="${me?'text-right':''}"><span class="inline-block px-3 py-1 rounded-xl text-xs ${me?'bg-violet-600':'bg-zinc-800'}">${m.text}</span></div>`; });
+                                                                                                                          box.scrollTop=box.scrollHeight;
+                                                                                                                           });
+                                                                                                                            document.querySelector('[data-tab="chat"]').click();
+                                                                                                                            };
+                                                                                                                            document.getElementById('privateSend').onclick=async()=>{
+                                                                                                                             if(!selectedFriend) return alert("Select friend from Friends tab first");
+                                                                                                                              const t=document.getElementById('privateInput').value.trim(); if(!t) return;
+                                                                                                                               const chatId=[myId,selectedFriend].sort().join('_');
+                                                                                                                                await addDoc(collection(db,"privateChats",chatId,"messages"),{text:t,uid:myId,time:serverTimestamp()});
+                                                                                                                                 document.getElementById('privateInput').value="";
+                                                                                                                                 };
+                                                                                                                                 </script>
+                                                                                                                                 </body>
+                                                                                                                                 </html>
